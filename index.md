@@ -1,1 +1,1 @@
-# checktor
+# C. Hecktor
