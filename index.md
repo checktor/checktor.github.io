@@ -1,1 +1,2 @@
+- [face_amnesia](https://checktor.github.io/face_amnesia/)
 - [keruvi](https://checktor.github.io/keruvi/)
