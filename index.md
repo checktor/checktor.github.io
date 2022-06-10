@@ -1,2 +1,3 @@
 - [face_amnesia](https://checktor.github.io/face_amnesia/)
 - [keruvi](https://checktor.github.io/keruvi/)
+- [quality-assurance-parent ](https://checktor.github.io/quality-assurance-parent/)
