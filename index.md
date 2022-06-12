@@ -1,5 +1,3 @@
-# Projects
-
 ## face_amnesia
 
 Detect, index and retrieve the face of a specific person in image and video files.
