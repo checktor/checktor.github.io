@@ -1,3 +1,16 @@
+**virtkube**
+
+Local Kubernetes cluster with Vagrant.
+
+- Source code: [https://github.com/checktor/virtkube/](https://github.com/checktor/virtkube/)
+
+**quality-assurance-parent**
+
+Parent POM including plugins for quality assurance such as JaCoCo, OWASP Dependency-Check or SpotBugs.
+
+- Source code: [https://github.com/checktor/quality-assurance-parent/](https://github.com/checktor/quality-assurance-parent/)
+- GitHub page: [https://checktor.github.io/quality-assurance-parent/](https://checktor.github.io/quality-assurance-parent/)
+
 **face_amnesia**
 
 Detect, index and retrieve the face of a specific person in image and video files.
@@ -11,10 +24,3 @@ Visualize the training progress of deep neural networks based on TensorFlow and 
 
 - Source code: [https://github.com/checktor/keruvi/](https://github.com/checktor/keruvi/)
 - GitHub page: [https://checktor.github.io/keruvi/](https://checktor.github.io/keruvi/)
-
-**quality-assurance-parent**
-
-Parent POM including plugins for quality assurance such as JaCoCo, OWASP Dependency-Check or SpotBugs.
-
-- Source code: [https://github.com/checktor/quality-assurance-parent/](https://github.com/checktor/quality-assurance-parent/)
-- GitHub page: [https://checktor.github.io/quality-assurance-parent/](https://checktor.github.io/quality-assurance-parent/)
