@@ -1,0 +1,11 @@
+services:
+  app:
+    read_only: true
+    tmpfs:
+      - /tmp
+    build:
+      context: .
+    ports:
+      - '4200:4200'
+    healthcheck:
+      test: curl --fail http://localhost:4200

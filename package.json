@@ -1,10 +1,10 @@
 {
-  "name": "checktor.github.io",
+  "name": "checktor-github-io",
   "version": "0.0.1",
   "scripts": {
     "ng": "npx ng",
     "start": "npx ng serve",
-    "build": "npx ng build --output-path=dist",
+    "build": "npx ng build",
     "watch": "npx ng build --watch --configuration development",
     "test": "npx ng test"
   },

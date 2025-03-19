@@ -1,59 +1,36 @@
-# ChecktorGithubIo
+# checktor.github.io
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.0.6.
+## Getting started
 
-## Development server
-
-To start a local development server, run:
+### Run local development server
 
 ```bash
-ng serve
+npm ci
+npx ng serve
 ```
 
 Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### Run Docker container
 
 ```bash
-ng generate component component-name
+sudo docker compose up -d
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+As soon as the container is successfully started, application is reachable via `http://localhost:4200/`. Changes in source code require a container rebuild with `sudo docker compose up -d --build`.
+
+### Run unit tests
 
 ```bash
-ng generate --help
+npm ci
+npx ng test
 ```
 
-## Building
-
-To build the project run:
+### Run build
 
 ```bash
-ng build
+npm ci
+npx ng build
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Resulting build artifacts can be found in `./dist/app` folder.
