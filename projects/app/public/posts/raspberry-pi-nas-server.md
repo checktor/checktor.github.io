@@ -2,11 +2,11 @@
 
 ## TL;DR
 
-Configuring a Raspberry Pi as NAS server inside your local network isn't that complicated.
+Configuring Raspberry Pi as NAS server inside local network isn't that complicated.
 
 ### What do I need?
 
-* Hardware: [Raspberry Pi](https://www.raspberrypi.com/products/) mini computer, external hard drive (preferably SSD connected with USB).
+* Hardware: [Raspberry Pi](https://www.raspberrypi.com/products/) computer, external hard drive (preferably SSD connected with USB).
 * Software: [Raspberry Pi OS](https://www.raspberrypi.com/software/operating-systems/), a few tools installed with [APT](https://wiki.ubuntuusers.de/APT/) package manager.
 
 ### What to do?
@@ -32,23 +32,25 @@ On first startup, you need to choose keyboard layout and create a user with corr
 * ***Advanced options***: expand filesystem to entire SD card.
 * ***Interface options***: enable SSH server.
 * ***System options***: configure wireless LAN (if needed). I personally prefer a wired connection due to increased performance and stability.
-* ***System options***: adjust hostname (in case *raspberrypi* as default value is not sufficient).
+* ***System options***: adjust hostname (in case *raspberrypi* as default is not sufficient).
 
-Applying these changes requires a reboot. Afterward, you will be able to connect to Raspberry Pi remotely.
+Applying these changes requires a reboot. Afterward, you will be able to connect remotely.
 
 ```shell
 ssh <username>@<IP-address>
 ```
 
-On first connection attempt, you will be asked to verify ED25519 key fingerprint. Each SSH server generates its own set of key pairs during installation. With them, clients are able to verify the server's identity in order to avoid accidentally trying to log in to an attacker's machine disguised as desired server (man-in-the-middle (MITM) attack). Such "host keys" are usually placed in `/etc/ssh` folder, its exact path is configured in `/etc/ssh/sshd_config` file (see *HostKey* parameter). In this case, the relevant fingerprint can be retrieved with the following command.
+On first connection attempt, you will be asked to verify ED25519 key fingerprint. What does this mean?
+
+Each SSH server generates its own set of key pairs during installation. With them, clients are able to verify the server's identity in order to avoid accidentally trying to log in to an attacker's machine disguised as desired server (man-in-the-middle (MITM) attack). Such "host keys" are usually placed in `/etc/ssh` folder, its exact path is configured in `/etc/ssh/sshd_config` file (see *HostKey* parameter). In this case, the relevant fingerprint can be retrieved with the following command.
 
 ```shell
 ssh-keygen -lf /etc/ssh/ssh_host_ed25519_key.pub
 ```
 
-It is a good habit to always double-check SSH key fingerprints. Most services publicly announce them, e.g. [GitHub](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/githubs-ssh-key-fingerprints/), [GitLab](https://gitlab.com/help/instance_configuration/) or [BitBucket](https://support.atlassian.com/bitbucket-cloud/docs/configure-ssh-and-two-step-verification/). When fingerprint is accepted during first connection, corresponding information will be written as hash to local `~/.ssh/known_hosts` file. As long as fingerprint is unchanged, future logins won't ask again for verification. Therefore, data in this file is relevant for IT security and needs to be handled with care. 
+It is a good habit to always double-check SSH key fingerprints. Most services publicly announce them, e.g. [GitHub](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/githubs-ssh-key-fingerprints/), [GitLab](https://gitlab.com/help/instance_configuration/) or [BitBucket](https://support.atlassian.com/bitbucket-cloud/docs/configure-ssh-and-two-step-verification/). When fingerprint is accepted during first connection, corresponding information will be written as hash to local `~/.ssh/known_hosts` file. As long as fingerprint is unchanged, future logins won't ask for verification. Therefore, data in this file is relevant for IT security and needs to be handled with care.
 
-After successful login, don't forget to run a full system upgrade.
+After successfully logged in, don't forget to run a full system upgrade.
 
 ```shell
 sudo apt update && sudo apt upgrade && sudo apt autoremove
@@ -65,7 +67,7 @@ sudo apt install ufw
 sudo ufw enable && sudo ufw allow proto tcp from 192.168.1.0/24 to any port 22
 ```
 
-According to the least privilege principle, we make the rule as specific as possible, e.g. by only allowing TCP traffic to port 22 and therefore discarding UDP and any other port. UDP is not necessary for SSH to work and might be used in distributed denial of service (DDoS) attacks. You might want to think about segmenting your network even further, e.g. by creating a dedicated subnet for IoT devices with restricted access. It totally makes sense to become familiar with the details and apply them appropriately to your needs.
+According to the least privilege principle, we make the rule as specific as possible, e.g. by only allowing TCP traffic to port 22 and therefore discarding UDP and other ports. UDP is not necessary for SSH to work and might be used in distributed denial of service (DDoS) attacks. You might want to think about segmenting your network further, e.g. by creating a dedicated subnet for IoT devices with restricted access. It totally makes sense to become familiar with the details and apply them appropriately to your needs.
 
 ## SSH
 
@@ -79,13 +81,13 @@ Currently, each login requires a password. An attacker could brute-force its way
 ssh-keygen
 ```
 
-On Ubuntu 24.04, this command automatically generates a key pair of type *EdDSA* and stores it as `id_ed25519` and `id_ed25519.pub` files in `~/.ssh` folder. On other systems, you might need to run `ssh-keygen -t ed25519`. I usually prefer elliptic-curve-based key pairs like those of type *EdDSA* as being faster and more robust. On key creation, you will be asked for a passphrase in order to encrypt private part of the key. You can leave this field empty skipping the encryption, but it offers an additional layer of security which should be considered. We now need to copy public part of key, i.e. *\*.pub* file, to remote server.
+On recent Ubuntu releases, this command automatically generates a key pair of type *EdDSA* and stores both files as `id_ed25519` and `id_ed25519.pub` in `~/.ssh` folder. On other systems, you might need to run `ssh-keygen -t ed25519`. I usually prefer elliptic-curve-based key pairs like those of type *EdDSA* as being faster and more robust. On key creation, you will be asked for a passphrase in order to encrypt private part of the key. You can leave this field empty skipping the encryption, but it offers an additional layer of security which should be considered. We now need to copy public part of key, i.e. *\*.pub* file, to remote server.
 
 ```shell
 ssh-copy-id -i ~/.ssh/id_ed25519.pub <username>@<IP-address>
 ```
 
-When running this command, Raspberry Pi receives public key and stores it in `~/.ssh/authorized_keys` file allowing to connect without providing a password. For convenience, you might want to create `~/.ssh/config` file in order to use `ssh <meaningful-name>` instead of `ssh <username>@<IP-address>`.
+When running this command, Raspberry Pi receives public key and stores it in `~/.ssh/authorized_keys` file. For convenience, you might want to create `~/.ssh/config` file on your computer in order to use `ssh <meaningful-name>` instead of `ssh <username>@<IP-address>`.
 
 ```
 Host <meaningful-name>
@@ -95,9 +97,9 @@ Host <meaningful-name>
     IdentitiesOnly yes
 ```
 
-The *HostName* and *User* fields should be self-explanatory. In *IdentityFile* line, you insert the path to public key previously copied to server. *IdentitiesOnly yes* avoids SSH to try every key stored in `.ssh` folder in case the specified one does not work. In my point of view, this is unexpected behaviour. I usually have multiple SSH keys on my system and I do not want SSH to send unrelated keys to remote servers in case of a typo in my SSH configuration. This setup fores SSH to only try the key specified or fail otherwise.
+The *HostName* and *User* fields are self-explanatory. In *IdentityFile* line, you insert the path to public key previously copied to server. *IdentitiesOnly yes* avoids SSH to try every key stored in `.ssh` folder in case the specified one does not work. In my point of view, this is unexpected behaviour. I usually have multiple SSH keys on my system and I do not want SSH to send unrelated keys to remote servers in case of a typo in my SSH configuration. This setup fores SSH to only try the key specified or fail otherwise.
 
-In general, the files in `.ssh` folder are sensitive information. Therefore, its access rights are important.
+The files in `.ssh` folder are sensitive information. Therefore, its access rights are important.
 
 ```shell
 ls -la ~/.ssh/
@@ -110,7 +112,7 @@ drwx------  ...   .
 -rw-------  ...   known_hosts
 ```
 
-Only *\*.pub* files are expected to be public and therefore readable by *others* (644). All other files should be only accessible by its creator (600). This also applies to `.ssh` folder itself (700). In case of remote servers, `authorized_keys` file needs to be protected the same way. Accidentally allowing each user to read SSH keys makes it easy for an attacker to spread across the network. Keep in mind that there are lots of users on a typical Linux system, most of them technical ones (see `/etc/passwd` file). An attacker could potentially manage to execute malicious code as any of these users.
+Only *\*.pub* files are expected to be public and therefore readable by *others* (644). All other files should only be accessible by its owner (600). This also applies to `.ssh` folder itself (700). In case of remote servers, `authorized_keys` file needs to be protected the same way. Accidentally allowing each user to read SSH keys makes it easy for an attacker to spread across the network. Keep in mind that there are lots of users on a typical Linux system, most of them technical ones (see `/etc/passwd` file). An attacker could potentially manage to execute malicious code as any of these users.
 
 ### Server
 
@@ -120,7 +122,7 @@ Let's have a deeper look into [SSH server configuration](https://www.man7.org/li
 sudo nano /etc/ssh/sshd_config
 ```
 
-We might want to change a few options here before restarting SSH daemon with `sudo systemctl restart sshd`.
+We might want to change a few parameters before restarting SSH daemon with `sudo systemctl restart sshd.service`.
 
 ```
 PermitRootLogin no
@@ -129,13 +131,13 @@ PermitEmptyPasswords no
 X11Forwarding no
 ```
 
-What is the meaning of these parameters?
+What is this all about?
 
-* ***PermitRootLogin***: do not allow user *root* to log in.
-* ***PasswordAuthentication***: do not allow password authentication in general.
-* ***PermitEmptyPasswords***: do not allow logins with empty password strings, e.g. using technical users.
+* ***PermitRootLogin no***: does not allow user *root* to log in.
+* ***PasswordAuthentication no***: does not allow password authentication in general.
+* ***PermitEmptyPasswords no***: does not allow logins with empty password strings, e.g. using technical users.
 
-In general, Linux itself disables logins for technical users (see last part of each entry in `/etc/passwd` file). So setting *PermitEmptyPasswords* to *no* adds an extra layer of security. The last parameter, *X11Forwarding*, catches the eye. In case X11 window manager is installed and in use (see *advanced options* in *raspi-config*), this parameter allows to forward graphical user interface through SSH tunnel. In other words, when logged in with SSH you can run graphical tools on Raspberry Pi and see the corresponding window on your computer. This can be tested by adding *-Y* flag to *ssh* command, e.g. `ssh -Y <username>@<IP-address>`. This option is usually turned off, but in this case, it is explicitly enabled by default. We do not need this feature, so we should disable it again.
+Linux itself usually disables logins for technical users (see last part of each entry in `/etc/passwd` file). So setting *PermitEmptyPasswords no* adds an extra layer of security. The last parameter, *X11Forwarding*, catches the eye. In case X11 window manager is installed and in use (see *advanced options* in *raspi-config*), this parameter allows to forward graphical user interface through SSH tunnel. In other words, when logged in with SSH you can run graphical tools on Raspberry Pi and see the corresponding window on your computer. This can be tested by adding *-Y* flag to *ssh* command, e.g. `ssh -Y <username>@<IP-address>`. This option defaults to *no*, but here it is explicitly enabled. We do not need this feature, so we should disable it again.
 
 Another way to mitigate potential DDoS attacks is to install and configure [fail2ban](https://github.com/fail2ban/fail2ban/). This tool searches logs of various services including SSH for failed login attempts. Corresponding IP addresses will be blocked for a specific amount of time if too many successive authentication requests fail.
 
@@ -155,15 +157,15 @@ You might have noticed that running a command with *sudo* does not require a pas
 <username> ALL=(ALL) NOPASSWD: ALL
 ```
 
-Open this file with `sudo visudo /etc/sudoers.d/010_pi-nopasswd` and use *#* to comment out this line. The main configuration file `/etc/sudoers` already contains a line allowing all users of group *sudo* to execute any command with root rights. Your current user is already part of *sudo* group.
+Open file with `sudo visudo /etc/sudoers.d/010_pi-nopasswd` and use *#* to comment out this line. The main configuration file `/etc/sudoers` already allows all users of group *sudo* to execute any command with root rights. Your current user is already part of group *sudo*.
 
-````
+```
 %sudo ALL=(ALL:ALL) ALL
-````
+```
 
 ### Wireless devices
 
-Raspberry Pi computers typically have built-in WLAN and Bluetooth adapters. Let's check these devices.
+Raspberry Pi computers typically have built-in WLAN and Bluetooth adapters. Let's have a closer look.
 
 ```shell
 rfkill --output-all
@@ -172,9 +174,9 @@ rfkill --output-all
 ID TYPE      DEVICE TYPE-DESC    SOFT      HARD
  0 bluetooth hci0   Bluetooth    unblocked unblocked
  1 wlan      phy0   Wireless LAN unblocked unblocked
-
 ```
-Both of them are present and unblocked. Let's also check our network status.
+
+Both devices are present and unblocked. Let's also check network configuration.
 
 ```shell
 ip address
@@ -188,29 +190,27 @@ ip address
     ...
 ```
 
-There are two network devices present, namely *eth0* for wired and *wlan0* for wireless connections. Notice *UP* and *DOWN* flags near the end of each line indicating that only wired *eth0* connection is currently enabled. So WLAN and Bluetooth capabilities are not in use. Let's disable both.
-
-In Raspberry Pi OS, we can configure hardware-based settings to be applied directly at boot time. Crucial for this is `/boot/firmware/config.txt` file. Add the following lines to *[all]* section at the bottom.
+There are two network interfaces available, namely *eth0* for wired and *wlan0* for wireless connections. Notice *UP* and *DOWN* flags near the end of each line indicating that only wired *eth0* interface is enabled. As wireless LAN is not in use and Bluetooth not needed, we can safely disable both. Raspberry Pi OS allows to configure hardware in `/boot/firmware/config.txt` file which will be applied at boot time. Add the following lines to *[all]* section at the end of the file.
 
 ```
 dtoverlay=disable-wifi
 dtoverlay=disable-bt
 ```
 
-After rebooting, both wireless devices are no longer available. You might want to consult the official documentation of [config.txt](https://www.raspberrypi.com/documentation/computers/config_txt.html) file for further options.
+After rebooting, both wireless devices are no longer available. Make sure to carefully read [config.txt documentation](https://www.raspberrypi.com/documentation/computers/config_txt.html) before changing any parameter. Mistakes will lead to failures at Raspberry Pi startup.
 
 ## USB
 
-We now want to mount an external hard drive for additional storage. Therefore, we connect the device via USB. Starting with Raspberry Pi model 4B, a USB port version 3.0 (or USB 3.2 Gen 1x1) is available (usually the more "blueish" one). Most external hard drives recently support USB 3, so we should use this kind of connection. I assume that hard drive is properly formatted with *ext4* file system for best performance. Other file systems are possible, e.g. *FAT* in case device needs to be used platform-independent. Make sure to replace *ext4* with *vfat* in mount configuration below in case you need this configuration.
+We want to mount an external hard drive connected via USB for additional storage. Starting with Raspberry Pi model 4B, USB 3.0 (or USB 3.2 Gen 1x1) ports are available (usually the more "blueish" ones). Most external hard drives support USB 3, so we should use this kind of connection. I assume that hard drive is properly formatted with *ext4* file system for best performance. Other file systems are possible, e.g. *FAT* allowing platform-independent usage. For the latter, make sure to replace *ext4* with *vfat* in mount configuration below.
 
-Let's find out the device name of connected hard drive using `lsblk`.
+Let's find out connected hard drive's device name using `lsblk`.
 
 ```
 sda     8:0  1  58,6G  0  disk
 └─sda1  8:1  1  58,6G  0  part
 ```
 
-In this case, a device with 58,6 GB storage called *sda1* is connected. Based on this name, we can get corresponding unique ID.
+Here, a device with 58,6 GB storage called *sda1* is connected. Based on name, we can get corresponding unique ID.
 
 ```shell
 ls -la /dev/disk/by-uuid/
@@ -219,15 +219,10 @@ ls -la /dev/disk/by-uuid/
 lrwxrwxrwx  ...  <uuid> -> ../../sda1
 ```
 
-Using this UUID, we can mount the USB device to a folder of our choice. Let's create `/mnt/usb-primary` folder for this purpose.
+Using this UUID, we can mount USB device to a folder of our choice. Let's create `/mnt/usb-primary` directory and mount external hard drive to it.
 
 ```shell
 sudo mkdir /mnt/usb-primary
-```
-
-Let's put everything together and mount external hard drive to our newly created folder.
-
-```shell
 sudo mount UUID=<uuid> /mnt/usb-primary
 ```
 
@@ -237,17 +232,19 @@ To persist this setup on reboot, edit `/etc/fstab` file and add the following li
 UUID=<uuid>  /mnt/usb-primary  ext4  defaults,nofail  0  3
 ```
 
-Right-most column containing the number *3* indicates the order of mounts (low to high) and is therefore dependent on other mount definitions. Focus on *defaults,nofail* entry in fourth column. We are applying default settings and add *nofail* option. It preserves the system to fail on reboot in case USB device is not connected. But what are those *defaults* we are applying here? Its meaning is platform-dependent but usually refers to `rw,suid,dev,exec,auto,nouser,async`.
+Right-most column containing number *3* indicates the order of mounts (low to high) and is therefore dependent on other mount definitions. Focus on *defaults,nofail* entry in fourth column. We are using default mount options and add *nofail* parameter. It preserves the system to fail on reboot in case USB device is not connected. But what are those *defaults* we are applying here? Its meaning is platform-dependent but usually refers to `rw,suid,dev,exec,auto,nouser,async`.
 
-* ***rw***: provide read-write access.
-* ***suid***: take set-user-ID or set-group-ID bits into account.
-* ***dev***: consider block or character devices.
-* ***exec***: allow execution of binaries stored on device.
-* ***auto***: can be mounted with -a option.
-* ***nouser***: ordinary users are not allowed to mount.
-* ***async***: I/O operations should be done asynchronously.
+* ***rw***: provides read-write access.
+* ***suid***: takes set-user-ID (SETUID) and set-group-ID (SETGID) bits into account when executing programs.
+* ***dev***: interprets block or character devices.
+* ***exec***: allows execution of scripts or binaries.
+* ***auto***: device can be mounted automatically, e.g. on reboot.
+* ***nouser***: device cannot be mounted by ordinary users.
+* ***async***: executes I/O operations asynchronously.
 
-Some optimizations are possible here.
+First option, *rw*, can be changed to *ro* in case read-only access is sufficient. As we are mounting a data partition, we do not need to run executables. Hence, we can replace *exec* by its opposite *noexec*. For the same reason, block or character devices are not relevant, so we turn *dev* into *nodev*. Parameter *suid* should be explained in more detail. It refers to SETUID and SETGID bits in Linux file permissions. They allow scripts or binaries to be executed with the rights of the file's owner or group, regardless of the invoking user. An example for this behaviour is *ping* command. It requires *root* privileges because it works with network sockets. However, you can run it without *sudo*. This is possible because `/usr/bin/ping` binary has *root* as owner and uses SETUID bit (see *s* instead of *x* in file permission string, i.e. *-rwsr-xr-x*). Therefore, *ping* will always run with rights of *root* user. Similar to above, we disable this functionality by adding *nosuid* parameter.
+
+For performance reasons, we should consider to add mount option *noatime* preventing the system to update access times. Consult [fstab documentation](https://www.man7.org/linux/man-pages/man8/mount.8.html) for further information. Putting all changes together, the optimized *fstab* line looks like this.
 
 ```
 UUID=<uuid>  /mnt/usb-primary  ext4  defaults,nosuid,nodev,noexec,nofail,noatime  0  3
@@ -260,14 +257,13 @@ We are now ready to install Samba server.
 ```shell
 sudo apt install samba
 ```
-
-We also want to create a Samba user linked to current Linux user. Make sure to specify a different password than those used for Linux account.
+First, we need to create Samba user linked to current Linux account. Make sure to specify a different password.
 
 ```shell
 sudo smbpasswd -a <username>
 ```
 
-Samba is communicating on TCP port 445. Create a firewall rule allowing this kind of traffic the same way we did with SSH.
+Samba is communicating on TCP port 445. Create a firewall rule allowing necessary traffic the same way we did with SSH.
 
 ```shell
 sudo ufw allow proto tcp from 192.168.1.0/24 to any port 445
@@ -279,7 +275,7 @@ Let's have a look at [Samba server configuration](https://www.samba.org/samba/do
 sudo nano /etc/samba/smb.conf
 ```
 
-There are a few unexpected settings, especially in "Share Definitions" part near the end. The *[homes]* section configures each user's home directory, i.e. `/home/<username>`, to be shared in read-only mode. According to *[printers]* section, available printers are also accessible for clients in local network. Let's remove all shares below "Share Definitions" comment and replace them with our own configuration called *[shared]*.
+There are a few unexpected settings, especially in "Share Definitions" part near the end. The *[homes]* section configures each user's home directory, i.e. `/home/<username>`, to be shared in read-only mode. According to *[printers]* section, available printers are also accessible in local network. Let's remove all shares below "Share Definitions" comment and replace them with our own configuration called *[shared]*.
 
 ```
 [shared]
@@ -292,19 +288,37 @@ There are a few unexpected settings, especially in "Share Definitions" part near
     valid users = <username>
 ```
 
+Let's have a closer look at these parameters.
+
+* ***browseable = no***: share is not shown in browse list, it needs to be accessed by name.
+* ***writeable = yes***: use share in read-write mode (change to *no* for read-only access).
+* ***create mask = 640***: default access permissions of newly created files.
+* ***directory mask = 750***: default access permissions of newly created folders.
+* ***valid users = <username>***: users allowed to access.
+
+Note that *create mask* and *directory mask* options set default file permissions on shared files and directories to 640 and 750 basically discarding *others* from accessing this files. So Samba share is restricted to our current user (see *valid users* parameter) and so are the files in file system.
+
 We also need to adjust a few settings in *[global]* section.
 
 ```
 [global]
-    bind interfaces only = Yes
+    bind interfaces only = yes
     interfaces = 127.0.0.0/8 eth0
-    map to guest = Never
+    map to guest = never
     server smb encrypt = required
     restrict anonymous = 2
     hosts allow = 192.168.1.0/24
     hosts deny = 0.0.0.0/0
 ```
 
+Uncommenting *bind interfaces only* and *interfaces* parameters adds an extra layer of security by explicitly defining network interfaces allowed to communicate with Samba. Loopback interface *127.0.0.0/8* is necessary to run internal commands like *smbpasswd*. Parameter *map to guest* is reset to its default *never* meaning that login requests with invalid passwords will always be rejected. During Samba installation, this parameter was set to *bad user*. In this case, users with invalid passwords will only be rejected if username is known. Otherwise, it is treated as guest login and therefore mapped to guest account. Setting *server smb encrypt = required* forces clients to use SMB encryption. With *restrict anonymous = 2*, anonymous or guest logins are disabled. Parameters *hosts allow* and *hosts deny* restrict all access to Samba server except for clients in specified subnet.
+
+After checking the correctness of configuration changes with `testparm`, we can restart Samba with `sudo systemctl restart smbd.service`.
+
+## Connect
+
+In file browser, you can access Samba share using `smb://<IP-address>/shared/` server address. You will be asked to enter username and password of Samba user. As we do not have changed *workgroup* option in `smb.conf`, you can leave the default value in *domain* field, i.e. *WORKGROUP*.
+
 ## History
 
-* 2025-09-18: Initial release.
+* 2025-09-21: Initial release.
