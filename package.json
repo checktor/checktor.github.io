@@ -21,7 +21,8 @@
     "@angular/material": "^20",
     "@angular/cdk": "^20",
     "ngx-markdown": "^20",
-    "marked": "^16"
+    "marked": "^16",
+    "prismjs": "^1"
   },
   "devDependencies": {
     "@angular/build": "^20",

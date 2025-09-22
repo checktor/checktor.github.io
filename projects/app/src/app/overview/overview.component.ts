@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {MatCard, MatCardContent, MatCardHeader, MatCardSubtitle, MatCardTitle} from '@angular/material/card';
+import {MatCard, MatCardContent, MatCardHeader, MatCardImage, MatCardTitle} from '@angular/material/card';
 import {RouterLink} from '@angular/router';
 
 @Component({
@@ -8,9 +8,9 @@ import {RouterLink} from '@angular/router';
     MatCard,
     MatCardContent,
     MatCardHeader,
-    MatCardSubtitle,
     MatCardTitle,
-    RouterLink
+    RouterLink,
+    MatCardImage
   ],
   templateUrl: './overview.component.html',
   styleUrl: './overview.component.scss'
