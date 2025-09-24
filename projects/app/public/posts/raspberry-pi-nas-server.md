@@ -334,7 +334,7 @@ After checking the correctness of configuration changes with `testparm`, we can 
 
 ## Client connection
 
-In file browser, you can access Samba share using *smb://<IP-address>/shared/* server address. You will be asked to enter username and password of Samba user. As we do not have changed *workgroup* option in `smb.conf` file, you can leave *WORKGROUP* as default value in *domain* field.
+In file browser, you can access Samba share using *smb://\<IP-address\>/shared/* server address. You will be asked to enter username and password of Samba user. As we do not have changed *workgroup* option in `smb.conf` file, you can leave *WORKGROUP* as default value in *domain* field.
 
 ## History
 

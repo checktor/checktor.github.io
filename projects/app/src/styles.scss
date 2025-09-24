@@ -1,3 +1,5 @@
+/* Importing Bootstrap SCSS file. */
+@use 'bootstrap/scss/bootstrap';
 
 // Include theming for Angular Material with `mat.theme()`.
 // This Sass mixin will define CSS variables that are used for styling Angular Material
@@ -37,6 +39,6 @@ body {
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
-.routable:hover {
+.routable {
   cursor: pointer;
 }
