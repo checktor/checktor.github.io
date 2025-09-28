@@ -1,17 +1,17 @@
 import {Component} from '@angular/core';
-import {MatCard, MatCardContent, MatCardHeader, MatCardImage, MatCardTitle} from '@angular/material/card';
 import {RouterLink} from '@angular/router';
 import {BlogPostCard} from '../common/blog-post-card.interface';
+import {MatCard, MatCardContent, MatCardHeader, MatCardImage, MatCardTitle} from '@angular/material/card';
 
 @Component({
   selector: 'app-overview',
   imports: [
+    RouterLink,
     MatCard,
-    MatCardContent,
     MatCardHeader,
     MatCardTitle,
-    RouterLink,
-    MatCardImage
+    MatCardImage,
+    MatCardContent
   ],
   templateUrl: './overview.component.html',
   styleUrl: './overview.component.scss'
