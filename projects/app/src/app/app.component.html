@@ -1,14 +1,13 @@
-<mat-toolbar>
-  <div class="stretch"></div>
+<mat-toolbar class="d-flex justify-content-between">
+  <div></div>
   <span class="routable" routerLink="">
     checktor.github.io
   </span>
-  <div class="stretch"></div>
   <button mat-icon-button routerLink="about-me">
     <mat-icon>perm_identity</mat-icon>
   </button>
 </mat-toolbar>
 
-<main class="content">
+<main class="container pt-3">
   <router-outlet></router-outlet>
 </main>

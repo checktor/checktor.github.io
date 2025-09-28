@@ -18,16 +18,21 @@
     "@angular/router": "^20",
     "rxjs": "~7.8",
     "tslib": "^2",
-    "@angular/material": "^20",
+
     "@angular/cdk": "^20",
-    "ngx-markdown": "^20",
+    "@angular/material": "^20",
+    "@ng-bootstrap/ng-bootstrap": "^19",
+    "@popperjs/core": "^2",
+    "bootstrap": "^5",
     "marked": "^16",
+    "ngx-markdown": "^20",
     "prismjs": "^1"
   },
   "devDependencies": {
     "@angular/build": "^20",
     "@angular/cli": "^20",
     "@angular/compiler-cli": "^20",
+    "@angular/localize": "^20",
     "@types/jasmine": "~5.1",
     "jasmine-core": "~5.9",
     "karma": "~6.4",
