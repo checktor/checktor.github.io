@@ -19,11 +19,12 @@ sudo docker compose up -d
 
 As soon as the container is successfully started, application is reachable via `http://localhost:4200/`. Changes in source code require a container rebuild with `sudo docker compose up -d --build`.
 
-### Run unit tests
+### Run integration tests
 
 ```bash
 npm ci
-npx ng test
+npx playwright install --with-deps
+npx playwright test
 ```
 
 ### Run build
@@ -34,3 +35,15 @@ npx ng build
 ```
 
 Resulting build artifacts can be found in `./dist/app` folder.
+
+## Dependencies
+
+* @angular/material - Material Design components.
+  * @angular/cdk
+* @ng-bootstrap/ng-bootstrap - Bootstrap CSS framework.
+  * bootstrap
+  * @popperjs/core
+* ngx-markdown - Markdown rendering.
+  * marked
+  * prismjs
+* @playwright/test - Integration tests.
