@@ -2,11 +2,11 @@
   @for (blogPostCard of blogPostCards; track blogPostCard) {
     <div class="col-lg-4 col-sm-6">
       <mat-card [attr.data-testid]=`${blogPostCard.link}-card` class="routable h-100" [routerLink]="blogPostCard.link">
-        <mat-card-header [attr.data-testid]=`${blogPostCard.link}-header`>
+        <mat-card-header [attr.data-testid]=`${blogPostCard.link}-card-header`>
           <mat-card-title>{{ blogPostCard.title }}</mat-card-title>
         </mat-card-header>
         <img mat-card-image class="p-3" [src]="blogPostCard.imgSrc" [alt]="blogPostCard.imgAlt">
-        <mat-card-content [attr.data-testid]=`${blogPostCard.link}-content`>
+        <mat-card-content [attr.data-testid]=`${blogPostCard.link}-card-content`>
           <p>{{ blogPostCard.content }}</p>
         </mat-card-content>
       </mat-card>

@@ -24,8 +24,8 @@ test('has toolbar button linking to about me page', async ({ page }) => {
 test('has card linking to "Raspberry Pi NAS server" page', async ({ page }) => {
   await page.goto('http://localhost:4200');
 
-  await expect(page.getByTestId('raspberry-pi-nas-server-header')).toContainText('Raspberry Pi NAS server');
-  await expect(page.getByTestId('raspberry-pi-nas-server-content')).toContainText('Searching for security and performance best practices when configuring Samba server on Raspberry Pi.');
+  await expect(page.getByTestId('raspberry-pi-nas-server-card-header')).toContainText('Raspberry Pi NAS server');
+  await expect(page.getByTestId('raspberry-pi-nas-server-card-content')).toContainText('Searching for security and performance best practices when configuring Samba server on Raspberry Pi.');
 
   await page.getByTestId('raspberry-pi-nas-server-card').click();
 
@@ -35,8 +35,8 @@ test('has card linking to "Raspberry Pi NAS server" page', async ({ page }) => {
 test('has card linking to "Under construction" page', async ({ page }) => {
   await page.goto('http://localhost:4200');
 
-  await expect(page.getByTestId('under-construction-header')).toContainText('Under construction');
-  await expect(page.getByTestId('under-construction-content')).toContainText('Stay tuned!');
+  await expect(page.getByTestId('under-construction-card-header')).toContainText('Under construction');
+  await expect(page.getByTestId('under-construction-card-content')).toContainText('Stay tuned!');
 
   await page.getByTestId('under-construction-card').click();
 
