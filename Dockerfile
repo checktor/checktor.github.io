@@ -4,7 +4,7 @@ COPY . .
 RUN npm ci
 RUN npx ng build
 
-FROM docker.io/nginxinc/nginx-unprivileged:1.29-alpine
+FROM docker.io/nginxinc/nginx-unprivileged:1.30-alpine
 ENV TZ=Europe/Berlin
 EXPOSE 4200
 COPY --chown=nginx:nginx nginx/default.conf /etc/nginx/conf.d/default.conf
