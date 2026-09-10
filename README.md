@@ -47,3 +47,9 @@ Resulting build artifacts can be found in `./dist/app` folder.
   * marked
   * prismjs
 * @playwright/test - Integration tests.
+
+
+
+
+
+sudo apt install docker-model-plugin

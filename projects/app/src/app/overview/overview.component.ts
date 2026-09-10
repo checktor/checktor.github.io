@@ -1,7 +1,9 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {RouterLink} from '@angular/router';
 import {BlogPostCard} from '../common/blog-post-card.interface';
 import {MatCard, MatCardContent, MatCardHeader, MatCardImage, MatCardTitle} from '@angular/material/card';
+import {HttpClient} from '@angular/common/http';
+import {take} from 'rxjs';
 
 @Component({
   selector: 'app-overview',
@@ -16,7 +18,29 @@ import {MatCard, MatCardContent, MatCardHeader, MatCardImage, MatCardTitle} from
   templateUrl: './overview.component.html',
   styleUrl: './overview.component.scss'
 })
-export class OverviewComponent {
+export class OverviewComponent implements OnInit {
+
+  constructor(private httpClient: HttpClient) {
+  }
+
+  ngOnInit(): void {
+    this.httpClient.post(
+      "http://smollm:12434/engines/v1/chat/completions",
+      {
+        model: "ai/smollm2:1.7b",
+        messages: [{"role": "user", "content": "Explain containerization in one line."}],
+        stream: false
+      },
+      {
+        headers: {
+          Origin: "http://localhost:4200"
+        }
+      })
+      .pipe(take(1))
+      .subscribe((data) => {
+        console.log(data)
+      });
+  }
 
   protected blogPostCards: BlogPostCard[] = [
     {

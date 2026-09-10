@@ -9,3 +9,10 @@ services:
       - '4200:4200'
     healthcheck:
       test: curl --fail http://localhost:4200
+    models:
+      - smollm
+
+models:
+  smollm:
+    model: ai/smollm2:1.7b
+    context_size: 8192
