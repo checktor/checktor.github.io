@@ -1,0 +1,20 @@
+<mat-form-field>
+  <mat-label>Input</mat-label>
+  <input matInput [(ngModel)]="message">
+</mat-form-field>
+<button matFab (click)="sendMessage()">
+  <mat-icon>play_circle_filled</mat-icon>
+</button>
+@for (chatMessage of chatMessages; track chatMessage) {
+  <div class="row">
+    <div class="col">
+      @if (chatMessage.role !== 'system') {
+        <mat-card>
+          <mat-card-content>
+            <p>{{ chatMessage.content }}</p>
+          </mat-card-content>
+        </mat-card>
+      }
+    </div>
+  </div>
+}
